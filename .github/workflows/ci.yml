@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: typecheck · build · test (${{ matrix.db }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # PGlite covers semantics in-process; a real Postgres proves the SQL
+        # runs identically on a server (and exercises the `pg` dialect).
+        include:
+          - db: pglite
+          - db: postgres
+    services:
+      postgres:
+        image: postgres:16
+        if: matrix.db == 'postgres'
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: ledger_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
+
+      - name: Test (embedded PGlite)
+        if: matrix.db == 'pglite'
+        run: npm test
+
+      - name: Test (real Postgres)
+        if: matrix.db == 'postgres'
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/ledger_test
+        run: npm test

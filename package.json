@@ -1,0 +1,43 @@
+{
+  "name": "ledger-ts",
+  "version": "0.1.0",
+  "description": "A double-entry ledger you can actually trust: append-only log, invariants enforced in the database, idempotent writes, transactional outbox.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "migrations", "README.md"],
+  "scripts": {
+    "dev": "tsx watch src/http/server.ts",
+    "start": "node dist/http/server.js",
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "demo": "tsx scripts/demo.ts"
+  },
+  "keywords": ["ledger", "double-entry", "accounting", "postgres", "typescript", "outbox", "idempotency"],
+  "dependencies": {
+    "@electric-sql/pglite": "^0.5.8",
+    "fastify": "^5.12.1",
+    "kysely": "^0.29.5",
+    "pg": "^8.23.0",
+    "zod": "^4.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "^26.4.1",
+    "@types/pg": "^8.23.1",
+    "tsx": "^4.23.13",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.11"
+  }
+}
