@@ -76,8 +76,11 @@ CREATE CONSTRAINT TRIGGER balanced
 git clone https://github.com/<you>/ledger-ts && cd ledger-ts
 npm install
 npm test                 # 40 tests against an embedded Postgres (PGlite) — no server needed
+npm run demo             # the whole design doc as a 20-second guided story, in your terminal
 npm run dev              # REST API + demo console on http://127.0.0.1:3000
 ```
+
+The **demo** seeds the example chart of accounts, posts the §4 transaction, replays it to show the idempotency gate, attempts an overspend to show rejection, reverses a posted transaction to show corrections-go-forward, then runs trial-balance + reconciler — and exits non-zero if any invariant broke. (It doubles as the CI smoke test.)
 
 Open http://127.0.0.1:3000 and click **① Seed accounts + sample flow** to see the design-doc example post live: a user paying 100.00 with a 1.50 platform fee, split across three accounts that sum to exactly zero — then hit **Reverse** and watch the projection stay conserved.
 
