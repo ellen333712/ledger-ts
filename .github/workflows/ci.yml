@@ -25,9 +25,11 @@ jobs:
           - db: pglite
           - db: postgres
     services:
+      # Always started; harmless for the pglite job. Conditional services are
+      # not valid in Actions (`if:` is not a supported key here) — the env var
+      # below is what actually selects which database the suite uses.
       postgres:
         image: postgres:16
-        if: matrix.db == 'postgres'
         env:
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: ledger_test
