@@ -73,7 +73,7 @@ CREATE CONSTRAINT TRIGGER balanced
 ## Quick start
 
 ```bash
-git clone https://github.com/<you>/ledger-ts && cd ledger-ts
+git clone https://github.com/ellen333712/ledger-ts && cd ledger-ts
 npm install
 npm test                 # 40 tests against an embedded Postgres (PGlite) — no server needed
 npm run demo             # the whole design doc as a 20-second guided story, in your terminal
